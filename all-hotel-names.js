@@ -1,8 +1,33 @@
 
 // --- Hotel Names Array (replace/add as needed) ---
 const hotelNames = [
-    "Bandara Pool Villas Phuket",
+    "Agranusa Villa",
+    "Aloft Kuta",
+    "Courtyard Seminyak",
+    "Double Six Luxury",
+    "Inara Alas Harum",
+    "K Club",
+    "Kappa Senses Ubud",
+    "Komaneka Keramas",
+    "Komaneka Tanggayuda",
+    "Mamaka By Ovolo",
+    "Movenpick Jimbaran",
+    "Padma Legian",
+    "Padma Ubud",
+    "Parkroyal Serviced Suites",
+    "Renaissance Nusa Dua",
+    "Renaissance Uluwatu",
+    "Samsara Ubud",
+    "Seres Spring",
+    "Sheraton Kuta",
+    "Six Senses Uluwatu",
     "Tejaprana Resort & Spa",
+    "The Apurva Kempinski",
+    "The Nest Nusa Dua",
+    "The Trans Bali",
+    "The Westin Ubud",
+    "Tribe Kuta",
+    "Ulu Segara",
 ];
 
 
