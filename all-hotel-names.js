@@ -28,6 +28,7 @@ const hotelNames = [
     "The Westin Ubud",
     "Tribe Kuta",
     "Ulu Segara",
+    "Holiday Inn Nusa Dua",
 ];
 
 
