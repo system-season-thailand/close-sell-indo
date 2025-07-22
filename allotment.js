@@ -1,6 +1,11 @@
 /* Variable to check if the user is an editor or not */
 let isEditor = false;
 
+// (place near other global vars)
+let isDragging = false;
+let dragMode = ''; // 'book' or 'clear'
+let dragChanged = [];
+
 // Role Modal logic
 const toggleModeBtn = document.getElementById("toggleModeBtn");
 const roleModal = document.getElementById("roleModal");
@@ -81,6 +86,9 @@ let hotelData = [];
 // row of table `allotment_indo`. Keep the array in memory for quick updates.
 let hotelBookings = []; // [{room_id, month_name, day_number, user_code}]
 
+// total allotment units for selected hotel
+let currentTotalUnit = 1;
+
 // Will hold release days value for currently selected hotel (set by selector script)
 let currentReleaseDays = 0;
 
@@ -112,6 +120,15 @@ async function loadHotelData(hotelName) {
     const { data, error } = await supabase.from(hotelName).select('*').order('id');
     if (error) return alert('Failed to load hotel data');
     hotelData = data;
+
+    // Determine total units and per-room units mapping
+    let hotelObj = null;
+    if (window.allotmentHotels) {
+        hotelObj = window.allotmentHotels.find(h => h.name === hotelName);
+    }
+
+    currentTotalUnit = hotelObj && hotelObj.totalUnit ? hotelObj.totalUnit : 1;
+    currentRoomUnits = hotelObj && hotelObj.units ? hotelObj.units : {};
 
     // Load bookings for this hotel
     await loadHotelBookings();
@@ -165,53 +182,64 @@ function renderMonthTable(month) {
 
     let html = `<table><thead><tr><th>Room Type</th>`;
     days.forEach(day => html += `<th>${day}</th>`);
-
-
-    html += `<tr><td>Total Unit</td>`;
-    days.forEach(day => html += `<th>1</th>`);
-
     html += `</tr></thead><tbody>`;
 
     hotelData.forEach(row => {
-        html += `<tr data-id="${row.id}" data-room-type="${row["Room Type"]}"><td>${row["Room Type"]}</td>`;
+        const roomType = row["Room Type"];
+        const roomUnits = currentRoomUnits[roomType] || currentTotalUnit;
 
-        // Parse current month string like "7-8, 11-12, 30"
-        const closedDays = parseCloseDays(row[month]);
+        // unit row for this room type (only one row, shows units number)
+        html += `<tr class="unit-row" data-room-type-unit="${roomType}"><td class="sticky-col">Total Unit</td>`;
+        days.forEach(() => html += `<th>${roomUnits}</th>`);
+        html += `</tr>`;
 
-        days.forEach(day => {
-            const isClosed = closedDays.includes(day);
-
-            // Determine if this cell falls inside the "released" window
-            let isReleased = false;
-            if (!isClosed && (currentReleaseDays || 0) > 0) {
-                const today = new Date();
-
-                // Build a Date object that represents this table cell
-                const monthIndex = months.indexOf(month);
-                const cellDate = new Date(today.getFullYear(), monthIndex, day);
-
-                // If the cell month is ahead of the current month, assume it's from the previous year
-                if (monthIndex > today.getMonth()) {
-                    cellDate.setFullYear(today.getFullYear() - 1);
-                }
-
-                // Calculate boundary dates
-                const twoMonthsAgo = new Date(today);
-                twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
-
-                const releaseBoundary = new Date(today);
-                releaseBoundary.setDate(releaseBoundary.getDate() + currentReleaseDays);
-
-                isReleased = cellDate >= twoMonthsAgo && cellDate <= releaseBoundary;
+        // generate one availability row per unit
+        for (let u = 1; u <= roomUnits; u++) {
+            const syntheticId = `${row.id}-${u}`;
+            html += `<tr data-id="${syntheticId}" data-room-type="${roomType}" data-unit-index="${u}" data-room-id="${row.id}">`;
+            if (u === 1) {
+                html += `<td rowspan="${roomUnits}" class="sticky-col">${roomType}</td>`;
             }
 
-            let classes = isClosed ? 'closed' : (isReleased ? 'released' : 'available');
-            const cellText = (isClosed || isReleased) ? day : '';
+            // Parse current month string like "7-8, 11-12, 30"
+            const closedDays = parseCloseDays(row[month]);
 
-            html += `<td class="${classes}" data-day="${day}" data-month="${month}">${cellText}</td>`;
-        });
+            days.forEach(day => {
+                const isClosed = closedDays.includes(day);
 
-        html += `</tr>`;
+                // Determine if this cell falls inside the "released" window
+                let isReleased = false;
+                if (!isClosed && (currentReleaseDays || 0) > 0) {
+                    const today = new Date();
+
+                    // Build a Date object that represents this table cell
+                    const monthIndex = months.indexOf(month);
+                    const cellDate = new Date(today.getFullYear(), monthIndex, day);
+
+                    // If the cell month is ahead of the current month, assume it's from the previous year
+                    if (monthIndex > today.getMonth()) {
+                        cellDate.setFullYear(today.getFullYear() - 1);
+                    }
+
+                    // Calculate boundary dates
+                    const twoMonthsAgo = new Date(today);
+                    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+                    const releaseBoundary = new Date(today);
+                    releaseBoundary.setDate(releaseBoundary.getDate() + currentReleaseDays);
+
+                    isReleased = cellDate >= twoMonthsAgo && cellDate <= releaseBoundary;
+                }
+
+                let classes = isClosed ? 'closed' : (isReleased ? 'released' : 'available');
+                const cellText = (isClosed || isReleased) ? day : '';
+
+                html += `<td class="${classes}" data-day="${day}" data-month="${month}">${cellText}</td>`;
+            });
+
+            html += `</tr>`;
+        }
+
     });
 
     html += `</tbody></table>`;
@@ -228,8 +256,8 @@ function paintBookings(month) {
     if (!hotelBookings.length) return;
     hotelBookings
         .filter(b => b.month_name === month)
-        .forEach(({ room_id, day_number, user_code }) => {
-            const selector = `tr[data-id="${room_id}"] td[data-month="${month}"][data-day="${day_number}"]`;
+        .forEach(({ room_id, unit_index, day_number, user_code }) => {
+            const selector = `tr[data-room-id=\"${room_id}\"][data-unit-index=\"${unit_index}\"] td[data-month=\"${month}\"][data-day=\"${day_number}\"]`;
             const cell = document.querySelector(selector);
             if (cell) {
                 // Store original state if not already stored
@@ -250,52 +278,72 @@ function attachCellListeners() {
     const cells = document.querySelectorAll('td[data-day]');
 
     cells.forEach(cell => {
+
         cell.addEventListener('mousedown', e => {
-            if (!isEditor) return; // prevent editing in view mode
+            if (!isEditor) return;
             e.preventDefault();
-            const dayText = cell.dataset.day;
 
-            // Toggle booking
+            dragChanged = [];
+            isDragging = true;
+
+            // Determine mode based on initial cell action
             if (cell.classList.contains('booked')) {
-                // --- UNBOOK: restore stored original state ---
-                const originalClass = cell.dataset.originalClass || 'available';
-
-                cell.classList.remove('booked');
-                cell.classList.remove('available', 'released', 'closed');
-                if (originalClass !== 'available') {
-                    cell.classList.add(originalClass);
-                } else {
-                    cell.classList.add('available');
-                }
-
-                // Restore original content
-                cell.innerHTML = cell.dataset.originalContent || '';
-
-                persistBooking(cell); // Save unbooking
+                dragMode = 'clear';
             } else {
-                // --- BOOK ---
-                // Store original state for future restore
-                const origClass = cell.classList.contains('closed') ? 'closed' : (cell.classList.contains('released') ? 'released' : 'available');
-                cell.dataset.originalClass = origClass;
-                cell.dataset.originalContent = cell.innerHTML;
-
-                const code = getCurrentUserCode();
-                cell.classList.remove('available', 'released', 'closed');
-                cell.classList.add('booked');
-                cell.innerHTML = `${dayText}<br>(${code})`;
-                persistBooking(cell); // Save booking
+                dragMode = 'book';
             }
+
+            applyDragEffect(cell);
         });
 
 
         cell.addEventListener('mouseenter', () => {
-            // No drag hover logic for simple booking
+            if (isEditor && isDragging) applyDragEffect(cell);
         });
 
         document.addEventListener('mouseup', async () => {
-            // No drag hover logic for simple booking
+            if (!isDragging) return;
+            isDragging = false;
+            // Persist all changed cells already persisted inside applyDragEffect so nothing else
+            dragChanged = [];
         });
     });
+}
+
+function applyDragEffect(cell) {
+    if (dragChanged.includes(cell)) return;
+
+    const dayText = cell.dataset.day;
+
+    if (dragMode === 'book' && !cell.classList.contains('booked')) {
+        // store original
+        if (!cell.dataset.originalClass) {
+            const origClass = cell.classList.contains('closed') ? 'closed' : (cell.classList.contains('released') ? 'released' : 'available');
+            cell.dataset.originalClass = origClass;
+            cell.dataset.originalContent = cell.innerHTML;
+        }
+
+        const code = getCurrentUserCode();
+        cell.classList.remove('available', 'released', 'closed');
+        cell.classList.add('booked');
+        cell.innerHTML = `${dayText}<br>(${code})`;
+        persistBooking(cell);
+        dragChanged.push(cell);
+    }
+
+    if (dragMode === 'clear' && cell.classList.contains('booked')) {
+        const originalClass = cell.dataset.originalClass || 'available';
+        cell.classList.remove('booked');
+        cell.classList.remove('available', 'released', 'closed');
+        if (originalClass !== 'available') {
+            cell.classList.add(originalClass);
+        } else {
+            cell.classList.add('available');
+        }
+        cell.innerHTML = cell.dataset.originalContent || '';
+        persistBooking(cell);
+        dragChanged.push(cell);
+    }
 }
 
 function handleCellToggle(cell) {
@@ -349,8 +397,9 @@ async function persistBooking(cell) {
     if (!row) return;
 
     const bookingObj = {
-        room_id: parseInt(row.dataset.id),
+        room_id: parseInt(row.dataset.roomId),
         room_type: row.dataset.roomType || '',
+        unit_index: parseInt(row.dataset.unitIndex || '1'),
         month_name: cell.dataset.month,
         day_number: parseInt(cell.dataset.day),
         user_code: getCurrentUserCode()
@@ -359,7 +408,8 @@ async function persistBooking(cell) {
     const idx = hotelBookings.findIndex(b =>
         b.room_id === bookingObj.room_id &&
         b.month_name === bookingObj.month_name &&
-        b.day_number === bookingObj.day_number);
+        b.day_number === bookingObj.day_number &&
+        b.unit_index === bookingObj.unit_index);
 
     if (cell.classList.contains('booked')) {
         // Add or replace

@@ -2,12 +2,17 @@
 // --- Hotel data (name + release days) ---
 // releaseDays represents how many days before arrival the allotment is released
 const allotmentHotels = [
-    { name: "Komaneka Keramas", releaseDays: 14 },
-    { name: "Komaneka Tanggayuda", releaseDays: 14 },
-    { name: "Tejaprana Resort & Spa", releaseDays: 7 },
-    { name: "The Trans Bali", releaseDays: 30 },
-    { name: "Double Six Luxury", releaseDays: 21 },
-    { name: "Tribe Kuta", releaseDays: 14 },
+    { name: "Komaneka Keramas", releaseDays: 14, totalUnit: 2 },
+    {
+        name: "Komaneka Tanggayuda", releaseDays: 14, totalUnit: 3, units: {
+            "Valley Villa": 3,
+            "Premier Valley Villa": 2
+        }
+    },
+    { name: "Tejaprana Resort & Spa", releaseDays: 7, totalUnit: 4 },
+    { name: "The Trans Bali", releaseDays: 30, totalUnit: 5 },
+    { name: "Double Six Luxury", releaseDays: 21, totalUnit: 6 },
+    { name: "Tribe Kuta", releaseDays: 14, totalUnit: 1 },
 ];
 
 // --- Website Users with Codes ---
@@ -108,6 +113,14 @@ function renderHotelSelector() {
         renderList();
         showDropdown();
     });
+
+    // Clear input and show full list on click for quick switching
+    input.addEventListener('click', () => {
+        input.value = '';
+        filtered = allotmentHotels.slice();
+        renderList();
+        showDropdown();
+    });
     input.addEventListener('keydown', e => {
         if (!dropdownOpen) return;
         if (e.key === 'ArrowDown') {
@@ -136,3 +149,6 @@ function renderHotelSelector() {
         if (!container.contains(e.target)) hideDropdown();
     });
 }
+
+// Expose to global for other scripts (e.g., allotment.js)
+window.allotmentHotels = allotmentHotels;

@@ -88,22 +88,64 @@ table {
     border: 1px solid #e0e0e0;
 }
 
-/* Sticky "Room Type" column */
-table th:first-child,
-table td:first-child {
+/* Sticky first column cells */
+.sticky-col {
     position: sticky;
     left: 0;
     background-color: white;
-    z-index: 2;
-    min-width: 80px;
-    font-weight: bold;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    z-index: 5;
+    min-width: 140px;
+    font-weight: 600;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Lower stacking context for non-sticky cells */
+table td:not(:first-child),
+table th:not(:first-child) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Sticky header row */
+table thead tr:first-child th {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 4;
+}
+
+/* Make the header's first cell (Room Type) sticky horizontally */
+table thead tr:first-child th:first-child {
+    left: 0;
+    z-index: 6;
+    /* above sticky-col cells */
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Unit rows visual distinction */
+tr.unit-row td {
+    background: #fafafa;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #333;
+}
+
+/* Smooth cell borders */
+table,
+th,
+td {
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #d0d0d0;
 }
 
 
 th,
 td {
-    padding: clamp(0.6rem, 1.5vw, 0.7rem) clamp(0.4rem, 1.5vw, 0.7rem);
+    padding: clamp(1rem, 2.5vw, 1.4rem) clamp(0.6rem, 2vw, 1rem);
     font-size: clamp(0.7rem, 2.5vw, 1rem);
     text-align: center;
     border: 1px solid #ccc;
