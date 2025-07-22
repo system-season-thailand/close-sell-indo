@@ -2,17 +2,33 @@
 // --- Hotel data (name + release days) ---
 // releaseDays represents how many days before arrival the allotment is released
 const allotmentHotels = [
-    { name: "Komaneka Keramas", releaseDays: 14, totalUnit: 2 },
+    { name: "Komaneka Keramas", releaseDays: 14, totalUnit: 1 },
+
+
     {
-        name: "Komaneka Tanggayuda", releaseDays: 14, totalUnit: 3, units: {
-            "Valley Villa": 3,
-            "Premier Valley Villa": 2
+        name: "Komaneka Tanggayuda", releaseDays: 14, units: {
+            "Valley Villa": 1,
+            "Premier Valley Villa": 1
         }
     },
-    { name: "Tejaprana Resort & Spa", releaseDays: 7, totalUnit: 4 },
-    { name: "The Trans Bali", releaseDays: 30, totalUnit: 5 },
-    { name: "Double Six Luxury", releaseDays: 21, totalUnit: 6 },
+
+
+    {
+        name: "Tejaprana Resort & Spa", releaseDays: 7, units: {
+            "Terrace Villa": 3,
+            "Valley Villa": 2
+        }
+    },
+
+
+    { name: "The Trans Bali", releaseDays: 30, totalUnit: 3 },
+
+
+    { name: "Double Six Luxury", releaseDays: 21, totalUnit: 1 },
+
+
     { name: "Tribe Kuta", releaseDays: 14, totalUnit: 1 },
+
 ];
 
 // --- Website Users with Codes ---

@@ -123,11 +123,12 @@ table thead tr:first-child th:first-child {
 }
 
 /* Unit rows visual distinction */
-tr.unit-row td {
-    background: #fafafa;
-    font-size: 0.85rem;
-    font-style: italic;
-    color: #333;
+tr.unit-row td,
+tr.unit-row th {
+    background: #d244199d;
+    /* blue */
+    color: #fff;
+    font-weight: 600;
 }
 
 /* Smooth cell borders */
