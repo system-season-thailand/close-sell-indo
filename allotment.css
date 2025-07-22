@@ -153,6 +153,14 @@ td {
     min-width: 1rem;
 }
 
+
+/* Room type cells (sticky-col in availability rows) highlighted in red */
+tbody tr:not(.unit-row)>td.sticky-col {
+    background-color: rgb(29, 121, 124);
+    color: #fff;
+}
+
+
 td.available {
     background-color: white;
     color: black;
