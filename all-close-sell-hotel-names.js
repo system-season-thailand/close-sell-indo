@@ -29,6 +29,8 @@ const closeSellHotelNames = [
     "Tribe Kuta",
     "Ulu Segara",
     "Holiday Inn Nusa Dua",
+    "The Meru Sanur",
+    "Bali Beach Hotel Sanur",
 ];
 
 
