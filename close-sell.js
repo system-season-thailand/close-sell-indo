@@ -68,7 +68,17 @@ let originalStates = new Map(); // store each cell’s original class
 
 
 
-
+// Return an array of the previous N month names relative to today (excludes current month)
+function getPreviousMonthNames(count = 3) {
+    const now = new Date();
+    const currentMonthIndex = now.getMonth(); // 0 = January ... 11 = December
+    const previousMonths = [];
+    for (let i = 1; i <= count; i++) {
+        const index = (currentMonthIndex - i + 12) % 12;
+        previousMonths.push(months[index]);
+    }
+    return previousMonths;
+}
 
 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -142,23 +152,27 @@ function renderMonthTable(month) {
     }
 
     const days = Array.from({ length: daysInMonth[month] }, (_, i) => i + 1);
+    const previousThreeMonths = getPreviousMonthNames(3);
+    const forceAllAvailable = previousThreeMonths.includes(month);
     let html = `<table><thead><tr><th>Room Type</th>`;
     days.forEach(day => html += `<th>${day}</th>`);
     html += `</tr></thead><tbody>`;
 
+
     hotelData.forEach(row => {
         html += `<tr data-id="${row.id}" data-room-type="${row["Room Type"]}"><td>${row["Room Type"]}</td>`;
 
-        // Parse current month string like "7-8, 11-12, 30"
-        const closedDays = parseCloseDays(row[month]);
+        // Parse current month string like "7-8, 11-12, 30" unless forcing availability
+        const closedDays = forceAllAvailable ? [] : parseCloseDays(row[month]);
 
         days.forEach(day => {
-            const isClosed = closedDays.includes(day);
+            const isClosed = forceAllAvailable ? false : closedDays.includes(day);
             html += `<td class="${isClosed ? 'closed' : 'available'}" data-day="${day}" data-month="${month}">${isClosed ? day : ''}</td>`;
         });
 
         html += `</tr>`;
     });
+
 
     html += `</tbody></table>`;
     tableContainer.innerHTML = html;
