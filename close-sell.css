@@ -14,6 +14,32 @@ body.view-mode td {
 
 
 
+/* Fixed button to clear previous 3 months */
+.clear-prev-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    font-size: 1rem;
+    padding: 10px;
+    background: #e53935;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.clear-prev-btn:hover {
+    background: #c62828;
+}
+
+.clear-prev-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+
 
 h2 {
     font-size: clamp(1.2rem, 4vw, 2rem);

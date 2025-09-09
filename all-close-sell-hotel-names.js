@@ -31,6 +31,7 @@ const closeSellHotelNames = [
     "Holiday Inn Nusa Dua",
     "The Meru Sanur",
     "Bali Beach Hotel Sanur",
+    "Anantara Ubud Bali Resort",
 ];
 
 
