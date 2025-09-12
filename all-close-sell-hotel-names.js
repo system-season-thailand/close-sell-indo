@@ -113,6 +113,13 @@ function renderHotelSelector() {
         renderList();
         showDropdown();
     });
+    input.addEventListener('click', () => {
+        input.value = '';
+        filtered = closeSellHotelNames.slice();
+        activeIndex = -1;
+        renderList();
+        showDropdown();
+    });
     input.addEventListener('focus', () => {
         filtered = closeSellHotelNames.filter(h => h.toLowerCase().includes(input.value.trim().toLowerCase()));
         renderList();
