@@ -33,6 +33,7 @@ const closeSellHotelNames = [
     "Bali Beach Hotel Sanur",
     "Anantara Ubud Bali Resort",
     "Hanging Garden of Bali",
+    "Umana Bali",
 
 
 
