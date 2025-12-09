@@ -34,6 +34,7 @@ const closeSellHotelNames = [
     "Anantara Ubud Bali Resort",
     "Hanging Garden of Bali",
     "Umana Bali",
+    "Aryaduta Kuta",
 
 
 
