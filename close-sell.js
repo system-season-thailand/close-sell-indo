@@ -129,24 +129,27 @@ const daysInMonth = {
     July: 31, August: 31, September: 30, October: 31, November: 30, December: 31
 };
 
-// Wire Clear Previous 3 Months button
+// Auto-run clear previous 3 months once per month (on first page load/reload of that month)
+const CLEAR_PREV_MONTHS_STORAGE_KEY = 'thaiCloseSellClearPrev3MonthsLastRun';
+
+function getCurrentMonthKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const clearBtn = document.getElementById('clearPrevBtn');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', async () => {
-            const proceed = confirm('Clear previous 3 months for all hotels?');
-            if (!proceed) return;
-            clearBtn.disabled = true;
+    const currentMonthKey = getCurrentMonthKey();
+    const lastRun = localStorage.getItem(CLEAR_PREV_MONTHS_STORAGE_KEY);
+
+    if (lastRun !== currentMonthKey) {
+        (async () => {
             try {
                 await clearPreviousMonthsForAllHotels(3);
-                alert('Cleared previous 3 months for all hotels.');
+                localStorage.setItem(CLEAR_PREV_MONTHS_STORAGE_KEY, currentMonthKey);
             } catch (e) {
-                console.error(e);
-                alert('Failed to clear. Please check console for details.');
-            } finally {
-                clearBtn.disabled = false;
+                console.error('Auto clear previous 3 months failed:', e);
             }
-        });
+        })();
     }
 });
 
