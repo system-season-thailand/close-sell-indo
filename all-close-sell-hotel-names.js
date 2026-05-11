@@ -35,6 +35,7 @@ const closeSellHotelNames = [
     "Hanging Garden of Bali",
     "Umana Bali",
     "Aryaduta Kuta",
+    "W Bali",
 
 
 
