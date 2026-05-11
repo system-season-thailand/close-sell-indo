@@ -36,6 +36,7 @@ const closeSellHotelNames = [
     "Umana Bali",
     "Aryaduta Kuta",
     "W Bali",
+    "Le Meridien Jimbaran",
 
 
 
