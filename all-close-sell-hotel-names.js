@@ -37,6 +37,7 @@ const closeSellHotelNames = [
     "Aryaduta Kuta",
     "W Bali",
     "Le Meridien Jimbaran",
+    "Potato Head Suites",
 
 
 
