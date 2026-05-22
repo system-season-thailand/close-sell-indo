@@ -39,7 +39,6 @@ const closeSellHotelNames = [
     "Le Meridien Jimbaran",
     "Potato Head Suites",
     "Pan Pacific",
-    "Parkroyal Serviced Suites",
 
 
 
