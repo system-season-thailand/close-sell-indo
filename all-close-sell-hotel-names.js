@@ -39,6 +39,7 @@ const closeSellHotelNames = [
     "Le Meridien Jimbaran",
     "Potato Head Suites",
     "Pan Pacific",
+    "Grand Mercure Seminyak",
 
 
 
