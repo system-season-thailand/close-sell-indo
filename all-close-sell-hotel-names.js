@@ -40,6 +40,7 @@ const closeSellHotelNames = [
     "Potato Head Suites",
     "Pan Pacific",
     "Grand Mercure Seminyak",
+    "Grand Mirage Resort Bali",
 
 
 
