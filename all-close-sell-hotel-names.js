@@ -43,6 +43,9 @@ const closeSellHotelNames = [
     "Grand Mirage Resort Bali",
     "Indigo Bali",
     "Sofitel Nusa Dua",
+    "Sofitel Nusa Dua",
+    "Jumeirah Bali",
+    "Aloft Seminyak",
 ];
 
 
