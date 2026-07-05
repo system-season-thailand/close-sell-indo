@@ -46,6 +46,7 @@ const closeSellHotelNames = [
     "Sofitel Nusa Dua",
     "Jumeirah Bali",
     "Aloft Seminyak",
+    "Botanica Sanctuary",
 ];
 
 
