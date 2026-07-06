@@ -1,5 +1,4 @@
 
-
 // --- Hotel Names Array (replace/add as needed) ---
 const closeSellHotelNames = [
     "Agranusa Villa",
@@ -48,6 +47,7 @@ const closeSellHotelNames = [
     "Jumeirah Bali",
     "Aloft Seminyak",
     "Botanica Sanctuary",
+    "Holiday Inn Resort Canggu",
 ];
 
 
