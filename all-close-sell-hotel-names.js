@@ -47,6 +47,7 @@ const closeSellHotelNames = [
     "Aloft Seminyak",
     "Botanica Sanctuary",
     "Holiday Inn Resort Canggu",
+    "SenS Hotel and Spa",
 ];
 
 
