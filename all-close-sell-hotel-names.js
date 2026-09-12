@@ -50,6 +50,7 @@ const closeSellHotelNames = [
     "SenS Hotel and Spa",
     "AnandaDara Ubud Resort",
     "The Anvaya Beach",
+    "Sanctoo Suites And Villas",
 ];
 
 
