@@ -51,6 +51,7 @@ const closeSellHotelNames = [
     "AnandaDara Ubud Resort",
     "The Anvaya Beach",
     "Sanctoo Suites And Villas",
+    "Impiana Private Villas Seminyak",
 ];
 
 
