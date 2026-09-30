@@ -52,6 +52,7 @@ const closeSellHotelNames = [
     "The Anvaya Beach",
     "Sanctoo Suites And Villas",
     "Impiana Private Villas Seminyak",
+    "Regent Resort Canggu",
 ];
 
 
