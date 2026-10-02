@@ -41,7 +41,7 @@ const closeSellHotelNames = [
     "Pan Pacific",
     "Grand Mercure Seminyak",
     "Grand Mirage Resort Bali",
-    "Indigo Bali",
+    "Indigo Bali Seminyak",
     "Sofitel Nusa Dua",
     "Jumeirah Bali",
     "Aloft Seminyak",
